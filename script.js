@@ -46,5 +46,6 @@ seccioLlista.appendChild(select);
 const videojocs = ["GTA6", "Pubg Mobile", "Aparcar Coches", "Parkour"];
 
 const juegos = [
-    id:1, nombreTius:"rol", nomVideojoc:"GTA6", consola:"Play5", pre
+    {id:1, tipus:"rol", nom:"GTA6", consola:"Play5", preu:89.99, disponible: true, companyia:"Rockstar"},
+    {id:2, tipus:"acció", nom:"Pubg Mobile", consola:"Play4", preu:0, disponible: true, companyia:"LightSpeed"}
 ];
