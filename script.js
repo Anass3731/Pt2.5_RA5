@@ -43,9 +43,86 @@ tipusVideojocs.forEach(function(tipus) {
 // 3. Añadimos el select ya completo dentro de nuestra sección de la lista en el HTML
 seccioLlista.appendChild(select);
 
-const videojocs = ["GTA6", "Pubg Mobile", "Aparcar Coches", "Parkour"];
+// array d’objectes
+// Lista de videojuegos disponibles en la tienda.
 
-const juegos = [
-    {id:1, tipus:"rol", nom:"GTA6", consola:"Play5", preu:89.99, disponible: true, companyia:"Rockstar"},
-    {id:2, tipus:"acció", nom:"Pubg Mobile", consola:"Play4", preu:0, disponible: true, companyia:"LightSpeed"}
+const videojocs = [
+  { id: 1, tipus: "acció", nom: "GTA VI", consola: ["Play5", "XBOX Series X"], preu: 79.99, disponible: true, companyia: "Rockstar Games" },
+  { id: 2, tipus: "aventura", nom: "The Legend of Zelda: Tears of the Kingdom", consola: ["Nintendo Switch", "Nintendo Switch2"], preu: 69.99, disponible: true, companyia: "Nintendo" },
+  { id: 3, tipus: "rol", nom: "Elden Ring", consola: ["Play5", "Play4", "XBOX Series X"], preu: 59.99, disponible: true, companyia: "Bandai Namco" },
+  { id: 4, tipus: "estratègia", nom: "Civilization VI", consola: ["Nintendo Switch", "Play4"], preu: 39.99, disponible: false, companyia: "2K" },
+  { id: 5, tipus: "simulació", nom: "Fifa 26", consola: ["Play5", "XBOX Series X", "XBOX Series S", "Nintendo Switch"], preu: 69.99, disponible: true, companyia: "EA Sports" }
 ];
+
+// Creamos el párrafo para avisos y la tabla para mostrar los resultados
+const p = document.createElement("p");
+const tabla = document.createElement("table");
+
+
+// Añadimos ambos elementos dentro de la sección de lista en el HTML
+seccioLlista.appendChild(p);
+seccioLlista.appendChild(tabla);
+
+// Función que construye y dibuja la tabla dinámica con los videojuegos recibidos
+function pintarTaula(llistaJocs) {
+    // Limpiamos mensajes y filas de búsquedas anteriores
+    p.textContent = "";
+    tabla.innerHTML = "";
+
+    // 1. Creamos la fila de cabeceras (th) con los nombres de las columnas
+    const filaCapcalera = document.createElement("tr");
+    const columnes = ["ID", "Tipus", "Nom", "Consola", "Preu", "Disponible", "Companyia"];
+
+    columnes.forEach(function(titol) {
+        const th = document.createElement("th");
+        th.textContent = titol;
+        filaCapcalera.appendChild(th);
+    });
+    tabla.appendChild(filaCapcalera);
+
+    // 2. Recorremos los videojuegos y creamos una fila (tr) por cada uno
+    llistaJocs.forEach(function(joc) {
+        const tr = document.createElement("tr");
+
+        // Preparamos los valores de cada columna para este videojuego
+        const valors = [
+            joc.id,
+            joc.tipus,
+            joc.nom,
+            joc.consola.join(", "),            // Convertimos el array de consolas en texto separado por comas
+            joc.preu,
+            joc.disponible ? "Sí" : "No",     // Convertimos true/false en "Sí" o "No"
+            joc.companyia
+        ];
+
+        // Creamos una celda (td) por cada valor y la metemos en la fila (tr)
+        valors.forEach(function(valor) {
+            const td = document.createElement("td");
+            td.textContent = valor;
+            tr.appendChild(td);
+        });
+
+        // PISTA 1: Añadimos la fila completa a la tabla
+        tabla.appendChild(tr);
+    });
+}
+
+// Escuchamos cuando cambia la opción seleccionada en el desplegable <select>
+select.addEventListener("change", function() {
+    // 1. Guardamos el tipo elegido por el usuario
+    const tipusSeleccionat = select.value;
+
+    // 2. Filtramos los videojuegos que coincidan con ese tipo
+    const filtrats = videojocs.filter(function(joc) {
+        return joc.tipus === tipusSeleccionat;
+    });
+
+    // 3. Si no hay videojuegos de ese tipo, mostramos el mensaje; si hay, pintamos la tabla
+    if (filtrats.length === 0) {
+        tabla.innerHTML = ""; // Borramos la tabla si había una visible de antes
+        p.textContent = "En aquests moments no tenim videojocs d'aquest tipus.";
+    } else {
+        // PISTA 2: Llamamos a la función pasando los juegos filtrados
+        pintarTaula(filtrats);
+    }
+});
